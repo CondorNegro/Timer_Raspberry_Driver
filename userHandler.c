@@ -41,7 +41,7 @@ int main ()
 
 		printf ("Comienzo de la interaccion con el modulo.\n");
 
-		int valor_retornado_apertura = open ("/dev/Timer_Rasp", O_RDWR);   /* Apertura el dispositivo. Permisos de lectura y escritura. */
+		int valor_retornado_apertura = open ("/dev/Timer_Rasp", O_RDWR);   /* Apertura del dispositivo. Permisos de lectura y escritura. */
 	  if (valor_retornado_apertura < 0)
 		{
 				perror ("No se pudo abrir el dispositivo.");
@@ -62,6 +62,14 @@ int main ()
 					 perror ("No se pudo leer la palabra encriptada del dispositivo.");
 					 return errno;
 		 }
+
+
+		 int valor_retornado_cierre = close (valor_retornado_apertura);   /* Cierre del dispositivo. Permisos de lectura y escritura. */
+	  		if (valor_retornado_cierre < 0)
+		{
+				perror ("No se pudo cerrar el dispositivo.");
+				return errno;
+		}
 	 }
 
 	 else
