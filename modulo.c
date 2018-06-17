@@ -12,6 +12,8 @@
 #include <linux/fs.h>             			/* Header for the Linux file system support. */
 #include <asm/uaccess.h>          			/* Para uso de funcion copy_to_user. */
 #include <linux/uaccess.h>          		/* Por cuestiones de compatibilidad entre diferentes versiones de Linux. */
+#include <linux/timer.h>
+
 #define  DEVICE_NAME "Timer_Rasp"   		/* Nombre de device en /dev/DEVICE_NAME */
 #define  CLASS_NAME  "siscomp"        	/* Clase de device. Nombre del char driver. */
 #define  MODULE_NAME "MODULO_TimerRasp"	/* Nombre del Módulo del Kernel. Usado para printk. */
@@ -35,6 +37,10 @@ static int     dev_release (struct inode *, struct file *);
 static ssize_t dev_read (struct file *, char *, size_t, loff_t *);
 static ssize_t dev_write (struct file *, const char *, size_t, loff_t *);
 
+
+static struct timer_list my_timer;
+
+
 /* Funciones que implementa el char device del módulo (open, read, write y release) */
 
 static struct file_operations fops = {
@@ -44,6 +50,10 @@ static struct file_operations fops = {
    .write = dev_write,
 };
 
+void my_timer_callback (unsigned long data)
+{
+  printk ("Expiro timer: (%ld).\n", jiffies);
+}
 
 /**
  *  @brief	Función de inicialización. Crea el char device. Crea el driver.
@@ -87,8 +97,11 @@ static int __init inicializacion_modulo (void)
       printk (KERN_ALERT "%s: Fallo en la creacion del dispositivo\n", MODULE_NAME);
       return PTR_ERR (dispositivo_modulo);
    }
-   printk (KERN_INFO "%s: El dispositivo encriptador fue creado exitosamente\n", MODULE_NAME); /* El dispositivo es inicializado. */
-   return 0;
+
+	 setup_timer (&my_timer, my_timer_callback, 0);
+   printk (KERN_INFO "%s: El dispositivo fue creado exitosamente\n", MODULE_NAME); /* El dispositivo es inicializado. */
+
+	 return 0;
 }
 
 /**
@@ -97,12 +110,16 @@ static int __init inicializacion_modulo (void)
 						Elimina la clase dispositivo. Libera el número de dispositivo. (Major).
  */
 static void __exit finalizacion_modulo(void){
-   device_destroy (class_modulo, MKDEV(number_device, 0)); /* Elimina el dispositivo. */
+	 int ret;
+	 ret = del_timer (&my_timer);
+	 if (ret) printk ("The timer is still in use...\n");
+	 device_destroy (class_modulo, MKDEV(number_device, 0)); /* Elimina el dispositivo. */
    class_unregister (class_modulo);                        /* Desregistra la clase dispositivo. */
    class_destroy (class_modulo);                           /* Elimina la clase dispositivo. */
    unregister_chrdev (number_device, DEVICE_NAME);         /* Libera el numberDevice. (Major). */
-   printk (KERN_INFO "%s: Finalizacion del linux kernel module\n", MODULE_NAME);
+	 printk (KERN_INFO "%s: Finalizacion del linux kernel module\n", MODULE_NAME);
 }
+
 
 
 
@@ -168,22 +185,25 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
 static ssize_t dev_write (struct file *filep, const char *buffer, size_t len, loff_t *offset)
 {
 
-   char auxBuffer[TAMANIOMAXIMO] = {0};
+   char aux_buffer[TAMANIOMAXIMO] = {0};
 
 	 /* Se usa la función copy_from_user por los permisos que se requieren para acceder a espacio de memoria del proceso de usuario. */
-   int errorManagement=copy_from_user(auxBuffer, buffer, len);
+   int error_management = copy_from_user (aux_buffer, buffer, len);
 
-	 /* errorManagement, en caso de error, posee como valor la cantidad de bytes no copiados. */
-   if(errorManagement != 0)
+	 /* error_management, en caso de error, posee como valor la cantidad de bytes no copiados. */
+   if(error_management != 0)
 	 {
-       printk(KERN_INFO "%s: ERROR. %d caracteres no encriptados.\n", MODULE_NAME, errorManagement);
+       printk(KERN_INFO "%s: ERROR. %d caracteres no copiados.\n", MODULE_NAME, error_management);
        return -EFAULT; //-14
    }
 
-   sprintf(cadena_original, "%s", auxBuffer);   /* Para formatear como string */
-   size_of_cadena_original = strlen(cadena_original);
+	 int tiempo;
+	 sscanf (aux_buffer, "%d", &tiempo);
 
-   printk(KERN_INFO "%s: Se recibieron %zu caracteres del usuario.\n", MODULE_NAME, len);
+	 int ret = mod_timer (&my_timer, jiffies + msecs_to_jiffies (tiempo));
+   if (ret) printk ("Error in mod_timer\n");
+
+   printk (KERN_INFO "%s: Se recibieron %zu caracteres del usuario.\n", MODULE_NAME, len);
    return len;
 }
 
