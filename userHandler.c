@@ -1,4 +1,4 @@
-/** 
+/**
 * @file userHandler.c
 * @brief Archivo que permite el ingreso por parte del usuario del tiempo a setear en el timer de la Raspberry PI 3 Model B.
 * @author Kleiner Matías, López Gastón.
@@ -17,50 +17,60 @@
 #define TAMANIOMAXIMO 100
 extern int errno ;
 
-static char cadena_tiempo[TAMANIOMAXIMO];     /* Buffer de la palabra encriptada por el módulo del kernel. */
-static int test = 1; /* Variable entera para testing. */
+static char cadena_original[TAMANIOMAXIMO];
 
 
-
-int main () 
+int main ()
 {
 	printf ("\nInicio del programa.\n");
-	
 
+	char mensaje_rasp[TAMANIOMAXIMO];
 
 	/* Solicitar cadena a usuario. */
-	char cadena_original[TAMANIOMAXIMO];
-	printf ("\nIntroducir tiempo: ");
+	printf ("\nIntroducir tiempo (milisegundos): ");
 	fgets (cadena_original, TAMANIOMAXIMO, stdin);
 	printf ("\nLa cadena introducida fue: %s\n",cadena_original);
-	
 
-	printf ("Comienzo de la interaccion con el modulo.\n");
-   
-   	int valorRetornado_Apertura = open("/dev/SOPEncriptador", O_RDWR);  /* Apertura el dispositivo. Permisos de lectura y escritura. */
-  	if (valorRetornado_Apertura < 0){ 
-      	perror("No se pudo abrir el dispositivo.");
-      	return errno;
-   	}
-   
-   	int valorRetornado_Escritura = write(valorRetornado_Apertura, cadenaOriginal, strlen(cadenaOriginal)); // Envio la palabra introducida por el usuario al encriptador.
-   	if (valorRetornado_Escritura < 0){
-      	perror("No se pudo escribir la palabra en el dispositivo.");
-      	return errno;
-  	}
+	int tiempo;
+	sscanf (cadena_original, "%d", &tiempo);
 
-   
-	int valorRetornado_Lectura = read(valorRetornado_Apertura, cadenaEncriptada, TAMANIOMAXIMO);  // Leo la palabra cifrada por el dispositivo.
-	 if ( valorRetornado_Lectura < 0){
-	       perror("No se pudo leer la palabra encriptada del dispositivo.");
-	       return errno;
+	printf ("El tiempo ingresado es: %d\n", tiempo);
+
+	if ( (tiempo > 0) & (tiempo < 60001) )
+	{
+
+		printf ("Comienzo de la interaccion con el modulo.\n");
+
+		int valor_retornado_apertura = open ("/dev/Timer_Rasp", O_RDWR);   /* Apertura el dispositivo. Permisos de lectura y escritura. */
+	  if (valor_retornado_apertura < 0)
+		{
+				perror ("No se pudo abrir el dispositivo.");
+				return errno;
+		}
+
+		int valor_retornado_escritura = write (valor_retornado_apertura, cadena_original, strlen (cadena_original)); /* Envio el tiempo introducido por el usuario al modulo. */
+		if (valor_retornado_escritura < 0)
+		{
+				perror ("No se pudo escribir la palabra en el dispositivo.");
+				return errno;
+		}
+
+
+		int valor_retornado_lectura = read (valor_retornado_apertura, mensaje_rasp, TAMANIOMAXIMO);  /* Lectura de la notificacion del modulo. */
+		 if ( valor_retornado_lectura < 0)
+		 {
+					 perror ("No se pudo leer la palabra encriptada del dispositivo.");
+					 return errno;
+		 }
 	 }
 
-    
-    
+	 else
+	 {
+		 printf ("Error. Tiempo fuera de los limites.\n");
+	 }
 
 	printf ("\nFin del programa.\n");
 
-	
+
 	return 0;
 }
