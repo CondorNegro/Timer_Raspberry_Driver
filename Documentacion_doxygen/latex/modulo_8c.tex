@@ -1,0 +1,161 @@
+\hypertarget{modulo_8c}{}\section{modulo.\+c File Reference}
+\label{modulo_8c}\index{modulo.\+c@{modulo.\+c}}
+
+
+Módulo del Trabajo Práctico 3 de Sistemas de Computación 2018.  
+
+
+{\ttfamily \#include $<$linux/init.\+h$>$}\\*
+{\ttfamily \#include $<$linux/module.\+h$>$}\\*
+{\ttfamily \#include $<$linux/device.\+h$>$}\\*
+{\ttfamily \#include $<$linux/kernel.\+h$>$}\\*
+{\ttfamily \#include $<$linux/fs.\+h$>$}\\*
+{\ttfamily \#include $<$asm/uaccess.\+h$>$}\\*
+{\ttfamily \#include $<$linux/uaccess.\+h$>$}\\*
+{\ttfamily \#include $<$linux/timer.\+h$>$}\\*
+{\ttfamily \#include $<$linux/interrupt.\+h$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{modulo_8c_a5f5a2c9450ebc584b4fe743c6b1a280b}{D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME}~\char`\"{}Timer\+\_\+\+Rasp\char`\"{}   		/$\ast$ Nombre de device en /dev/D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME $\ast$/
+\item 
+\#define \hyperlink{modulo_8c_a79f2713d570c7065f61a160134ea765b}{C\+L\+A\+S\+S\+\_\+\+N\+A\+ME}~\char`\"{}siscomp\char`\"{}        	/$\ast$ Clase de device. Nombre del char driver. $\ast$/
+\item 
+\#define \hyperlink{modulo_8c_a14ded244c47bbba850a8a4be6d16c7e3}{M\+O\+D\+U\+L\+E\+\_\+\+N\+A\+ME}~\char`\"{}M\+O\+D\+U\+L\+O\+\_\+\+Timer\+Rasp\char`\"{}	/$\ast$ Nombre del Módulo del Kernel. Usado para printk. $\ast$/
+\item 
+\#define \hyperlink{modulo_8c_a26d7595fea32ab74d4e1ebeb5e5d9662}{T\+A\+M\+A\+N\+I\+O\+M\+A\+X\+I\+MO}~100           		/$\ast$ Máximo tamaño de buffers. $\ast$/
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{modulo_8c_ad94b36675e7eb067ea3ce6ff9e244a44}{M\+O\+D\+U\+L\+E\+\_\+\+L\+I\+C\+E\+N\+SE} (\char`\"{}G\+PL\char`\"{})
+\item 
+\hyperlink{modulo_8c_ab0fda18f08dd9f44f05fc108d8cb6931}{M\+O\+D\+U\+L\+E\+\_\+\+A\+U\+T\+H\+OR} (\char`\"{}Lopez-\/Kleiner\char`\"{})
+\item 
+\hyperlink{modulo_8c_a99ff5b4c14efa724eeb101e52971254d}{M\+O\+D\+U\+L\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON} (\char`\"{}Modulo Timer Raspberry. Trabajo Practico 3 Sistemas de Computacion\char`\"{})
+\item 
+void \hyperlink{modulo_8c_ace201f002ce1528bdbec56b341a3c23a}{tasklet\+\_\+do} (unsigned long t)
+\begin{DoxyCompactList}\small\item\em Función del tasklet. Realiza un printk. \end{DoxyCompactList}\item 
+void \hyperlink{modulo_8c_a7f35a2faeee5c615ea743159d3bbf04c}{my\+\_\+timer\+\_\+callback} (unsigned long data)
+\begin{DoxyCompactList}\small\item\em Función llamada cuando el timer expira. Llama a la funcion tasklet\+\_\+schedule. \end{DoxyCompactList}\item 
+\hyperlink{modulo_8c_a52a42694cddb3f11d6c30c2cd2c7cd8d}{module\+\_\+init} (inicializacion\+\_\+modulo)
+\item 
+\hyperlink{modulo_8c_af3b967d3d87722f31496b965f09fcf07}{module\+\_\+exit} (finalizacion\+\_\+modulo)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Módulo del Trabajo Práctico 3 de Sistemas de Computación 2018. 
+
+\begin{DoxyAuthor}{Author}
+López Gastón -\/ Kleiner Matías 
+\end{DoxyAuthor}
+
+
+\subsection{Macro Definition Documentation}
+\index{modulo.\+c@{modulo.\+c}!C\+L\+A\+S\+S\+\_\+\+N\+A\+ME@{C\+L\+A\+S\+S\+\_\+\+N\+A\+ME}}
+\index{C\+L\+A\+S\+S\+\_\+\+N\+A\+ME@{C\+L\+A\+S\+S\+\_\+\+N\+A\+ME}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{C\+L\+A\+S\+S\+\_\+\+N\+A\+ME}{CLASS_NAME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+A\+S\+S\+\_\+\+N\+A\+ME~\char`\"{}siscomp\char`\"{}        	/$\ast$ Clase de device. Nombre del char driver. $\ast$/}\hypertarget{modulo_8c_a79f2713d570c7065f61a160134ea765b}{}\label{modulo_8c_a79f2713d570c7065f61a160134ea765b}
+
+
+Definition at line 20 of file modulo.\+c.
+
+\index{modulo.\+c@{modulo.\+c}!D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME@{D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME}}
+\index{D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME@{D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME}{DEVICE_NAME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME~\char`\"{}Timer\+\_\+\+Rasp\char`\"{}   		/$\ast$ Nombre de device en /dev/D\+E\+V\+I\+C\+E\+\_\+\+N\+A\+ME $\ast$/}\hypertarget{modulo_8c_a5f5a2c9450ebc584b4fe743c6b1a280b}{}\label{modulo_8c_a5f5a2c9450ebc584b4fe743c6b1a280b}
+
+
+Definition at line 19 of file modulo.\+c.
+
+\index{modulo.\+c@{modulo.\+c}!M\+O\+D\+U\+L\+E\+\_\+\+N\+A\+ME@{M\+O\+D\+U\+L\+E\+\_\+\+N\+A\+ME}}
+\index{M\+O\+D\+U\+L\+E\+\_\+\+N\+A\+ME@{M\+O\+D\+U\+L\+E\+\_\+\+N\+A\+ME}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+U\+L\+E\+\_\+\+N\+A\+ME}{MODULE_NAME}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+O\+D\+U\+L\+E\+\_\+\+N\+A\+ME~\char`\"{}M\+O\+D\+U\+L\+O\+\_\+\+Timer\+Rasp\char`\"{}	/$\ast$ Nombre del Módulo del Kernel. Usado para printk. $\ast$/}\hypertarget{modulo_8c_a14ded244c47bbba850a8a4be6d16c7e3}{}\label{modulo_8c_a14ded244c47bbba850a8a4be6d16c7e3}
+
+
+Definition at line 21 of file modulo.\+c.
+
+\index{modulo.\+c@{modulo.\+c}!T\+A\+M\+A\+N\+I\+O\+M\+A\+X\+I\+MO@{T\+A\+M\+A\+N\+I\+O\+M\+A\+X\+I\+MO}}
+\index{T\+A\+M\+A\+N\+I\+O\+M\+A\+X\+I\+MO@{T\+A\+M\+A\+N\+I\+O\+M\+A\+X\+I\+MO}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{T\+A\+M\+A\+N\+I\+O\+M\+A\+X\+I\+MO}{TAMANIOMAXIMO}}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+M\+A\+N\+I\+O\+M\+A\+X\+I\+MO~100           		/$\ast$ Máximo tamaño de buffers. $\ast$/}\hypertarget{modulo_8c_a26d7595fea32ab74d4e1ebeb5e5d9662}{}\label{modulo_8c_a26d7595fea32ab74d4e1ebeb5e5d9662}
+
+
+Definition at line 22 of file modulo.\+c.
+
+
+
+\subsection{Function Documentation}
+\index{modulo.\+c@{modulo.\+c}!M\+O\+D\+U\+L\+E\+\_\+\+A\+U\+T\+H\+OR@{M\+O\+D\+U\+L\+E\+\_\+\+A\+U\+T\+H\+OR}}
+\index{M\+O\+D\+U\+L\+E\+\_\+\+A\+U\+T\+H\+OR@{M\+O\+D\+U\+L\+E\+\_\+\+A\+U\+T\+H\+OR}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+U\+L\+E\+\_\+\+A\+U\+T\+H\+O\+R(""Lopez-\/\+Kleiner"")}{MODULE_AUTHOR("Lopez-Kleiner")}}]{\setlength{\rightskip}{0pt plus 5cm}M\+O\+D\+U\+L\+E\+\_\+\+A\+U\+T\+H\+OR (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}Lopez-\/Kleiner\char`\"{}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{modulo_8c_ab0fda18f08dd9f44f05fc108d8cb6931}{}\label{modulo_8c_ab0fda18f08dd9f44f05fc108d8cb6931}
+\index{modulo.\+c@{modulo.\+c}!M\+O\+D\+U\+L\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON@{M\+O\+D\+U\+L\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON}}
+\index{M\+O\+D\+U\+L\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON@{M\+O\+D\+U\+L\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+U\+L\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+O\+N(""Modulo Timer Raspberry. Trabajo Practico 3 Sistemas de Computacion"")}{MODULE_DESCRIPTION("Modulo Timer Raspberry. Trabajo Practico 3 Sistemas de Computacion")}}]{\setlength{\rightskip}{0pt plus 5cm}M\+O\+D\+U\+L\+E\+\_\+\+D\+E\+S\+C\+R\+I\+P\+T\+I\+ON (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}Modulo Timer Raspberry. Trabajo Practico 3 Sistemas de Computacion\char`\"{}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{modulo_8c_a99ff5b4c14efa724eeb101e52971254d}{}\label{modulo_8c_a99ff5b4c14efa724eeb101e52971254d}
+\index{modulo.\+c@{modulo.\+c}!module\+\_\+exit@{module\+\_\+exit}}
+\index{module\+\_\+exit@{module\+\_\+exit}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{module\+\_\+exit(finalizacion\+\_\+modulo)}{module_exit(finalizacion_modulo)}}]{\setlength{\rightskip}{0pt plus 5cm}module\+\_\+exit (
+\begin{DoxyParamCaption}
+\item[{finalizacion\+\_\+modulo}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{modulo_8c_af3b967d3d87722f31496b965f09fcf07}{}\label{modulo_8c_af3b967d3d87722f31496b965f09fcf07}
+\index{modulo.\+c@{modulo.\+c}!module\+\_\+init@{module\+\_\+init}}
+\index{module\+\_\+init@{module\+\_\+init}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{module\+\_\+init(inicializacion\+\_\+modulo)}{module_init(inicializacion_modulo)}}]{\setlength{\rightskip}{0pt plus 5cm}module\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{inicializacion\+\_\+modulo}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{modulo_8c_a52a42694cddb3f11d6c30c2cd2c7cd8d}{}\label{modulo_8c_a52a42694cddb3f11d6c30c2cd2c7cd8d}
+\index{modulo.\+c@{modulo.\+c}!M\+O\+D\+U\+L\+E\+\_\+\+L\+I\+C\+E\+N\+SE@{M\+O\+D\+U\+L\+E\+\_\+\+L\+I\+C\+E\+N\+SE}}
+\index{M\+O\+D\+U\+L\+E\+\_\+\+L\+I\+C\+E\+N\+SE@{M\+O\+D\+U\+L\+E\+\_\+\+L\+I\+C\+E\+N\+SE}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{M\+O\+D\+U\+L\+E\+\_\+\+L\+I\+C\+E\+N\+S\+E(""G\+PL"")}{MODULE_LICENSE("GPL")}}]{\setlength{\rightskip}{0pt plus 5cm}M\+O\+D\+U\+L\+E\+\_\+\+L\+I\+C\+E\+N\+SE (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}G\+PL\char`\"{}}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{modulo_8c_ad94b36675e7eb067ea3ce6ff9e244a44}{}\label{modulo_8c_ad94b36675e7eb067ea3ce6ff9e244a44}
+\index{modulo.\+c@{modulo.\+c}!my\+\_\+timer\+\_\+callback@{my\+\_\+timer\+\_\+callback}}
+\index{my\+\_\+timer\+\_\+callback@{my\+\_\+timer\+\_\+callback}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{my\+\_\+timer\+\_\+callback(unsigned long data)}{my_timer_callback(unsigned long data)}}]{\setlength{\rightskip}{0pt plus 5cm}void my\+\_\+timer\+\_\+callback (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{data}
+\end{DoxyParamCaption}
+)}\hypertarget{modulo_8c_a7f35a2faeee5c615ea743159d3bbf04c}{}\label{modulo_8c_a7f35a2faeee5c615ea743159d3bbf04c}
+
+
+Función llamada cuando el timer expira. Llama a la funcion tasklet\+\_\+schedule. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & (unsigned long) Parametro por defecto de la funcion. No es utilizado. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 77 of file modulo.\+c.
+
+\index{modulo.\+c@{modulo.\+c}!tasklet\+\_\+do@{tasklet\+\_\+do}}
+\index{tasklet\+\_\+do@{tasklet\+\_\+do}!modulo.\+c@{modulo.\+c}}
+\subsubsection[{\texorpdfstring{tasklet\+\_\+do(unsigned long t)}{tasklet_do(unsigned long t)}}]{\setlength{\rightskip}{0pt plus 5cm}void tasklet\+\_\+do (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{t}
+\end{DoxyParamCaption}
+)}\hypertarget{modulo_8c_ace201f002ce1528bdbec56b341a3c23a}{}\label{modulo_8c_ace201f002ce1528bdbec56b341a3c23a}
+
+
+Función del tasklet. Realiza un printk. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & (unsigned long) Parametro por defecto de la funcion. No es utilizado. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 59 of file modulo.\+c.
+
