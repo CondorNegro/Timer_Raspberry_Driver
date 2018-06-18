@@ -13,6 +13,8 @@
 #include <asm/uaccess.h>          			/* Para uso de funcion copy_to_user. */
 #include <linux/uaccess.h>          		/* Por cuestiones de compatibilidad entre diferentes versiones de Linux. */
 #include <linux/timer.h>
+#include <linux/interrupt.h>
+
 
 #define  DEVICE_NAME "Timer_Rasp"   		/* Nombre de device en /dev/DEVICE_NAME */
 #define  CLASS_NAME  "siscomp"        	/* Clase de device. Nombre del char driver. */
@@ -50,9 +52,32 @@ static struct file_operations fops = {
    .write = dev_write,
 };
 
+/**
+ *  @brief	Función del tasklet. Realiza un printk.
+ *  @param t (unsigned long) Parametro por defecto de la funcion. No es utilizado.
+ */
+void tasklet_do (unsigned long t)
+{
+	printk ("Tasklet: el timer finalizo.\n");
+}
+
+
+static struct tasklet_struct tasklet_timer = {
+	.next = NULL, /* Es NULL porque no hay mas tasklet en linea para scheduling */
+	.state = 0, /* Se inicializa siempre con cero */
+	.count = ATOMIC_INIT(0), /* Esta ativada para poder correr, al ser igual a cero */
+	.func = tasklet_do, /* Funcion tasklet */
+	.data = 0, /* tasklet_do es iniciada con el parametro .data */
+};
+
+/**
+ *  @brief	Función llamada cuando el timer expira. Llama a la funcion tasklet_schedule.
+ *  @param data	(unsigned long) Parametro por defecto de la funcion. No es utilizado. 
+ */
 void my_timer_callback (unsigned long data)
 {
-  printk ("Expiro timer: (%ld).\n", jiffies);
+  printk ("Finalizo timer: (%ld).\n", jiffies);
+  tasklet_schedule (&tasklet_timer);
 }
 
 /**
