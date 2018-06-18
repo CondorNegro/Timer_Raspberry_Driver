@@ -185,26 +185,27 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
 static ssize_t dev_write (struct file *filep, const char *buffer, size_t len, loff_t *offset)
 {
 
-   char aux_buffer[TAMANIOMAXIMO] = {0};
-
+   	char aux_buffer[TAMANIOMAXIMO] = {0};
+  	int tiempo;
+  	int ret;
 	 /* Se usa la función copy_from_user por los permisos que se requieren para acceder a espacio de memoria del proceso de usuario. */
-   int error_management = copy_from_user (aux_buffer, buffer, len);
+   	int error_management = copy_from_user (aux_buffer, buffer, len);
 
 	 /* error_management, en caso de error, posee como valor la cantidad de bytes no copiados. */
-   if(error_management != 0)
-	 {
+  	if(error_management != 0)
+	{
        printk(KERN_INFO "%s: ERROR. %d caracteres no copiados.\n", MODULE_NAME, error_management);
        return -EFAULT; //-14
-   }
+    }
 
-	 int tiempo;
-	 sscanf (aux_buffer, "%d", &tiempo);
+	 
+	sscanf (aux_buffer, "%d", &tiempo);
 
-	 int ret = mod_timer (&my_timer, jiffies + msecs_to_jiffies (tiempo));
-   if (ret) printk ("Error in mod_timer\n");
+	ret = mod_timer (&my_timer, jiffies + msecs_to_jiffies (tiempo));
+   	if (ret) printk ("Error in mod_timer\n");
 
-   printk (KERN_INFO "%s: Se recibieron %zu caracteres del usuario.\n", MODULE_NAME, len);
-   return len;
+   	printk (KERN_INFO "%s: Se recibieron %zu caracteres del usuario.\n", MODULE_NAME, len);
+   	return len;
 }
 
 

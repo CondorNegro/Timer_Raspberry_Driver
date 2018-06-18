@@ -1,7 +1,7 @@
 #Makefile TP3. Sistemas de Computación. López Gastón. Kleiner Matías.
 
 
-obj-m+= archivos_compilacion/modulo.o
+obj-m+= modulo.o
 KVERSION = $(shell uname -r)
 
 userHandler: userHandler.c
