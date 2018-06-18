@@ -24,7 +24,7 @@ int main ()
 {
 	printf ("\nInicio del programa.\n");
 
-	char mensaje_rasp[TAMANIOMAXIMO];
+	
 
 	/* Solicitar cadena a usuario. */
 	printf ("\nIntroducir tiempo (milisegundos): ");
@@ -38,7 +38,7 @@ int main ()
 
 	if ( (tiempo > 0) & (tiempo < 60001) )
 	{
-
+		char mensaje_rasp[TAMANIOMAXIMO];
 		printf ("Comienzo de la interaccion con el modulo.\n");
 
 		int valor_retornado_apertura = open ("/dev/Timer_Rasp", O_RDWR);   /* Apertura del dispositivo. Permisos de lectura y escritura. */
